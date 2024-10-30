@@ -73,3 +73,7 @@ dmypy.json
 # Windows specific
 Thumbs.db
 ehthumbs.db
+
+
+# memory data
+memory.json

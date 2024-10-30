@@ -12,12 +12,12 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class FeedbackGenerator:
-    def __init__(self, model_name="gpt-3.5-turbo"):
+    def __init__(self, model_name="gpt-3.5-turbo-instruct"):
         """
         初始化 FeedbackGenerator。
 
         参数:
-            model_name (str): 要使用的 OpenAI 模型名称。默认为 "gpt-3.5-turbo"。
+            model_name (str): 要使用的 OpenAI 模型名称。默认为 "gpt-3.5-turbo-instruct"。
         """
         if not config.OPENAI_API_KEY:
             logger.error("OpenAI API 密钥未设置。")
@@ -29,11 +29,14 @@ class FeedbackGenerator:
 
 
         self.llm = OpenAI(
-            model="gpt-3.5-turbo-instruct",
+            model=model_name,
             temperature=0.7,
-            api_key=config.OPENAI_API_KEY,
-            base_url=config.OPENAI_API_BASE_URL  # 传递自定义的 Base URL
-        )
+            openai_api_key=config.OPENAI_API_KEY,
+            base_url=config.OPENAI_API_BASE_URL,  # 传递自定义的 Base URL
+            # openai_api_base='https://api.302.ai/v1/chat/completions',
+            ) #302.AI的base-url
+
+        
         
         self.prompt = PromptTemplate(
             input_variables=["chat_history", "user_input"],
@@ -66,7 +69,7 @@ class FeedbackGenerator:
 
 # if main  test
 if __name__ == "__main__":
-    feedback = FeedbackGenerator()
+    feedback = FeedbackGenerator(model_name="gpt-4o-mini")
     chat_history = "2022-01-01 09:00:00: 用户说：我感到焦虑。"
     user_input = "2022-01-01 09:30:00: 用户说：我感到压力很大。"
     print(feedback.generate_feedback(chat_history, user_input))
