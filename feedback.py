@@ -1,11 +1,16 @@
 # feedback.py
 
 
-from langchain_openai.llms import OpenAI  # 从 langchain_openai.llms 导入 OpenAI
+from langchain_openai import ChatOpenAI
 from langchain.chains import LLMChain  # 从 langchain.chains 导入 LLMChain
 from langchain.prompts import PromptTemplate  # 从 langchain.prompts 导入 PromptTemplate
 import config
 import logging
+
+
+
+
+
 
 # 配置日志记录
 logging.basicConfig(level=logging.INFO)
@@ -28,15 +33,21 @@ class FeedbackGenerator:
         
 
 
-        self.llm = OpenAI(
-            model=model_name,
-            temperature=0.7,
-            openai_api_key=config.OPENAI_API_KEY,
-            base_url=config.OPENAI_API_BASE_URL,  # 传递自定义的 Base URL
-            # openai_api_base='https://api.302.ai/v1/chat/completions',
-            ) #302.AI的base-url
+        self.llm = ChatOpenAI(
+            model="gpt-4o",
+            temperature=0,
+            max_tokens=None,
+            timeout=None,
+            max_retries=2,
+            api_key=config.OPENAI_API_KEY,
+            base_url=config.OPENAI_API_BASE_URL
+            # api_key="...",  # if you prefer to pass api key in directly instaed of using env vars
+            # base_url="...",
+            # organization="...",
+            # other params...
+        )
 
-        
+                
         
         self.prompt = PromptTemplate(
             input_variables=["chat_history", "user_input"],
