@@ -7,10 +7,17 @@ load_dotenv()
 
 # API Keys and URLs
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
 OPENAI_API_BASE_URL = "https://api.302.ai/v1/"
+
+
 
 ANTHROPIC_API_KEY = OPENAI_API_KEY
 ANTHROPIC_API_BASE_URL = "https://api.302.ai/"
+
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+DEEPSEEK_API_BASE_URL = "https://api.deepseek.com"
+DEEPSEEK_TEMERATURE = 1.3
 
 # LLM Parameters
 TEMPERATURE = 0.7
@@ -33,13 +40,14 @@ logger.info(f"max_retries: {MAX_RETRIES}")
 MEMORY_RETENTION_DAYS = 7
 
 AVAILABLE_MODELS = [
+    "gpt-4o-mini", #default
     "gpt-3.5-turbo",
     "gpt-4o",
-    "gpt-4o-mini",
     "claude-3-haiku-20240307",
     "claude-3-opus-20240229",
     "claude-3-5-sonnet-20240620",
     "claude-3-5-sonnet-20241022",
+    "deepseek-chat",  # new model choice
     # Add other models if needed
 ]
 

@@ -19,7 +19,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 class FeedbackGenerator:
-    def __init__(self, model_name="gpt-3.5-turbo-instruct"):
+    def __init__(self, model_name="gpt-4o-mini"):
         """
         初始化 FeedbackGenerator。
 
@@ -58,6 +58,17 @@ class FeedbackGenerator:
                 api_key=config.ANTHROPIC_API_KEY,
                 base_url=config.ANTHROPIC_API_BASE_URL,
                 # other params...
+            )
+        elif "deepseek" in model_name.lower():
+            logger.info(f"选择的模型: {model_name}")  # 调试信息
+            self.llm = ChatOpenAI(
+                model_name=model_name,
+                openai_api_key=config.DEEPSEEK_API_KEY,
+                openai_api_base=config.DEEPSEEK_API_BASE_URL,
+                temperature=config.DEEPSEEK_TEMERATURE,
+                max_tokens=config.MAX_TOKENS,
+                timeout=config.TIMEOUT,
+                max_retries=config.MAX_RETRIES
             )
         else:
             raise ValueError(f"Unsupported model_name: {model_name}")
@@ -104,4 +115,7 @@ if __name__ == "__main__":
     print(feedback.generate_feedback(chat_history, user_input))
     
     feedback = FeedbackGenerator(model_name="gpt-3.5-turbo")
+    print(feedback.generate_feedback(chat_history, user_input))
+    
+    feedback = FeedbackGenerator(model_name="deepseek-chat")
     print(feedback.generate_feedback(chat_history, user_input))
