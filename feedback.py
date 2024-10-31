@@ -11,6 +11,10 @@ import logging
 
 
 
+from prompt_template import prompt_template
+
+
+
 
 
 
@@ -76,21 +80,10 @@ class FeedbackGenerator:
 
                 
         
-        self.prompt = PromptTemplate(
-            input_variables=["chat_history", "user_input"],
-            template="""
-            你是一个心理辅导师。以下是用户最近的心理活动记录：
+# 使用导入的提示模板
+        self.prompt = prompt_template
 
-            {chat_history}
-
-            用户最新的心理活动记录：
-            {user_input}
-
-            请根据以上内容，提供有针对性和个性化的反馈和建议。
-            根据最新的活动，给出一个最新活动的反馈
-            """
-        )
-        self.chain = LLMChain(llm=self.llm, prompt=self.prompt)
+        self.chain = self.prompt | self.llm  # 使用 | 运算符将提示模板和 LLMChain 连接起来
         logger.info("FeedbackGenerator 初始化成功。")
 
     def generate_feedback(self, chat_history, user_input):
@@ -98,7 +91,7 @@ class FeedbackGenerator:
             logger.info("生成反馈：")
             logger.info(f"Chat History: {chat_history}")
             logger.info(f"User Input: {user_input}")
-            feedback = self.chain.invoke({"chat_history": chat_history, "user_input": user_input})['text']  # 使用 invoke 方法
+            feedback = self.chain.invoke({"chat_history": chat_history, "user_input": user_input}).content  # 使用 invoke 方法
             logger.info("反馈生成成功。")
             return feedback
         except Exception as e:
