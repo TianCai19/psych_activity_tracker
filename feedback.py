@@ -2,6 +2,8 @@
 
 
 from langchain_openai import ChatOpenAI
+from langchain_anthropic import ChatAnthropic
+
 from langchain.chains import LLMChain  # 从 langchain.chains 导入 LLMChain
 from langchain.prompts import PromptTemplate  # 从 langchain.prompts 导入 PromptTemplate
 import config
@@ -29,23 +31,37 @@ class FeedbackGenerator:
             raise ValueError("OpenAI API 密钥未设置，请设置环境变量 OPENAI_API_KEY。")
         
         logger.info(f"使用的 OpenAI API Base URL: {config.OPENAI_API_BASE_URL}")  # 调试信息
-        logger.info(f"选择的 OpenAI 模型: {model_name}")  # 调试信息
+        logger.info(f"使用的 Anthropic API Base URL: {config.ANTHROPIC_API_BASE_URL}")  # 调试信息
         
 
 
-        self.llm = ChatOpenAI(
-            model=model_name,
-            temperature=0,
-            max_tokens=None,
-            timeout=None,
-            max_retries=2,
-            api_key=config.OPENAI_API_KEY,
-            base_url=config.OPENAI_API_BASE_URL
-            # api_key="...",  # if you prefer to pass api key in directly instaed of using env vars
-            # base_url="...",
-            # organization="...",
-            # other params...
-        )
+        if "gpt" in model_name.lower():
+            logger.info(f"选择的模型: {model_name}")  # 调试信息
+
+            self.llm = ChatOpenAI(
+                model_name=model_name,
+                openai_api_key=config.OPENAI_API_KEY,
+                openai_api_base=config.OPENAI_API_BASE_URL,
+                temperature=config.TEMPERATURE,
+                max_tokens=config.MAX_TOKENS,
+                timeout=config.TIMEOUT,
+                max_retries=config.MAX_RETRIES
+            )
+        elif "claude" in model_name.lower():
+            logger.info(f"选择的模型: {model_name}")  # 调试信息
+            self.llm= ChatAnthropic(
+                model=model_name,
+                temperature=config.TEMPERATURE,
+                max_tokens=config.MAX_TOKENS,
+                timeout=config.TIMEOUT,
+                max_retries=config.MAX_RETRIES,
+                api_key=config.ANTHROPIC_API_KEY,
+                base_url=config.ANTHROPIC_API_BASE_URL,
+                # other params...
+            )
+        else:
+            raise ValueError(f"Unsupported model_name: {model_name}")
+
 
                 
         
@@ -81,7 +97,11 @@ class FeedbackGenerator:
 
 # if main  test
 if __name__ == "__main__":
-    feedback = FeedbackGenerator(model_name="gpt-4o-mini")
+    feedback = FeedbackGenerator(model_name="claude-3-5-sonnet-20241022")
+    # feedback = FeedbackGenerator(model_name="gpt-4o-mini")
     chat_history = "2022-01-01 09:00:00: 用户说：我感到焦虑。"
     user_input = "2022-01-01 09:30:00: 用户说：我感到压力很大。"
+    print(feedback.generate_feedback(chat_history, user_input))
+    
+    feedback = FeedbackGenerator(model_name="gpt-3.5-turbo")
     print(feedback.generate_feedback(chat_history, user_input))
