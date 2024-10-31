@@ -20,8 +20,9 @@ MEMORY_RETENTION_DAYS = 7
 
 
 AVAILABLE_MODELS = [
-    "gpt-3.5-turbo-instruct",
+    "gpt-3.5-turbo",
     "gpt-4o",
+    "gpt-4o-mini",
     # 添加其他您希望支持的模型
 ]
 

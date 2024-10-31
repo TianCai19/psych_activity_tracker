@@ -34,7 +34,7 @@ class FeedbackGenerator:
 
 
         self.llm = ChatOpenAI(
-            model="gpt-4o",
+            model=model_name,
             temperature=0,
             max_tokens=None,
             timeout=None,
@@ -60,6 +60,7 @@ class FeedbackGenerator:
             {user_input}
 
             请根据以上内容，提供有针对性和个性化的反馈和建议。
+            根据最新的活动，给出一个最新活动的反馈
             """
         )
         self.chain = LLMChain(llm=self.llm, prompt=self.prompt)
@@ -70,7 +71,7 @@ class FeedbackGenerator:
             logger.info("生成反馈：")
             logger.info(f"Chat History: {chat_history}")
             logger.info(f"User Input: {user_input}")
-            feedback = self.chain.invoke({"chat_history": chat_history, "user_input": user_input})  # 使用 invoke 方法
+            feedback = self.chain.invoke({"chat_history": chat_history, "user_input": user_input})['text']  # 使用 invoke 方法
             logger.info("反馈生成成功。")
             return feedback
         except Exception as e:

@@ -1,7 +1,7 @@
 # pages/View_Feedback.py
 
 import streamlit as st
-from memory import MemoryManager
+from memory import MemoryManager, ConversationManager
 from feedback import FeedbackGenerator
 import time
 import config
@@ -9,6 +9,7 @@ import config
 def view_feedback():
     st.header("查看心理反馈")
     memory_manager = MemoryManager()
+    conversation_manager = ConversationManager()
     
     # 获取可用的模型列表
     available_models = config.AVAILABLE_MODELS
@@ -43,6 +44,9 @@ def view_feedback():
     st.success("反馈生成成功！")
     st.write("**反馈：**")
     st.write(feedback)
+
+    # 保存对话结果
+    conversation_manager.add_conversation(latest_entry, feedback)
 
 if __name__ == "__main__":
     view_feedback()
