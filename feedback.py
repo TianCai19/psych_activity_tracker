@@ -4,7 +4,7 @@
 from langchain_openai import ChatOpenAI
 from langchain_anthropic import ChatAnthropic
 
-from langchain.chains import LLMChain  # 从 langchain.chains 导入 LLMChain
+#from langchain.chains import LLMChain  # 从 langchain.chains 导入 LLMChain
 from langchain.prompts import PromptTemplate  # 从 langchain.prompts 导入 PromptTemplate
 import config
 import logging
@@ -74,9 +74,20 @@ class FeedbackGenerator:
                 timeout=config.TIMEOUT,
                 max_retries=config.MAX_RETRIES
             )
+        elif "llama" in model_name.lower():
+            logger.info(f"选择的模型:ollama: {model_name}")  # 调试信息
+            self.llm = ChatOpenAI(
+                base_url=config.OLLAMA_API_BASE_URL,
+                model=model_name,
+                temperature=config.TEMPERATURE,
+                #max_tokens=config.MAX_TOKENS
+            )
         else:
             raise ValueError(f"Unsupported model_name: {model_name}")
-
+        logger.info(f"Llama 模型初始化结果: {self.llm}")
+        # 如果 LLM 初始化失败，抛出异常
+        if not self.llm:
+            raise ValueError("ChatOllama 初始化失败，请检查配置或模型名称。")
 
                 
         
@@ -101,14 +112,14 @@ class FeedbackGenerator:
 
 # if main  test
 if __name__ == "__main__":
-    feedback = FeedbackGenerator(model_name="claude-3-5-sonnet-20241022")
-    # feedback = FeedbackGenerator(model_name="gpt-4o-mini")
+    # feedback = FeedbackGenerator(model_name="claude-3-5-sonnet-20241022")
+    # # feedback = FeedbackGenerator(model_name="gpt-4o-mini")
     chat_history = "2022-01-01 09:00:00: 用户说：我感到焦虑。"
     user_input = "2022-01-01 09:30:00: 用户说：我感到压力很大。"
-    print(feedback.generate_feedback(chat_history, user_input))
+    # print(feedback.generate_feedback(chat_history, user_input))
     
-    feedback = FeedbackGenerator(model_name="gpt-3.5-turbo")
-    print(feedback.generate_feedback(chat_history, user_input))
+    # feedback = FeedbackGenerator(model_name="gpt-3.5-turbo")
+    # print(feedback.generate_feedback(chat_history, user_input))
     
-    feedback = FeedbackGenerator(model_name="deepseek-chat")
+    feedback = FeedbackGenerator(model_name="llama3.2")
     print(feedback.generate_feedback(chat_history, user_input))

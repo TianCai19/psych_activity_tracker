@@ -19,6 +19,21 @@ DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 DEEPSEEK_API_BASE_URL = "https://api.deepseek.com"
 DEEPSEEK_TEMERATURE = 1.3
 
+
+TAICHU_API_KEY =os.getenv("TAICHU_API_KEY")
+# TAICHU_API_BASE_URL = "http://172.31.20.47:9001/v1"
+TAICHU_API_BAISE_URL = "api.tecorigin.com"
+
+
+# Ollama 配置
+OLLAMA_API_BASE_URL = "http://localhost:11434/v1"  # 根据实际的 Ollama 地址设置
+
+# http://172.31.20.47:9001/v1/chat/completions
+
+# http://172.31.20.47:9001/v1/completions
+
+# http://172.31.20.47:9001/v1/models
+
 # LLM Parameters
 TEMPERATURE = 0.7
 MAX_TOKENS = 1024
@@ -48,6 +63,7 @@ AVAILABLE_MODELS = [
     "claude-3-5-sonnet-20240620",
     "claude-3-5-sonnet-20241022",
     "deepseek-chat",  # new model choice
+    "llama3.2"
     # Add other models if needed
 ]
 
