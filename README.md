@@ -80,3 +80,12 @@
 
 ```bash
 streamlit run main.py
+```
+
+### 使用 `uv` 运行测试脚本
+
+您可以使用 `uv` 来运行 `test_langSmith_conversation_v2.py` 脚本，而无需启动 conda 或记住环境名称和切换命令。
+
+```bash
+uv run test_langSmith_conversation_v2.py
+```
